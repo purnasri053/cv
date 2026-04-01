@@ -199,52 +199,59 @@ function CandidateDashboardPage() {
         {/* ── HOME VIEW — 3 top + 2 bottom ── */}
         {view === 'home' && (
           <>
-            {/* Compact Hero + Cards side by side */}
-            <div className="cdash-home-layout">
-
-              {/* Left — compact hero */}
-              <div className="cdash-hero-compact">
-                <div className="cdash-hero-badge">✨ AI Career Assistant</div>
-                <h2 className="cdash-hero-title">
+            {/* Full-width Hero Banner */}
+            <div className="cdash-hero-full">
+              <div className="cdash-hero-left">
+                <div className="cdash-hero-badge">✨ AI-Powered Career Assistant</div>
+                <h2 className="cdash-hero-big-title">
                   Ready to land your<br />
                   <span className="cdash-hero-highlight">dream job, {candidateUser.full_name.split(' ')[0]}?</span>
                 </h2>
-                <p className="cdash-hero-quote">
-                  "Every expert was once a beginner. Your next opportunity starts with one upload." 🚀
+                <p className="cdash-hero-big-quote">
+                  "Every expert was once a beginner. Every pro was once an amateur.<br />
+                  Your next opportunity starts with one upload." 🚀
                 </p>
-                <div className="cdash-hero-stats">
-                  <div className="cdash-hero-stat">
-                    <span className="cdash-hero-stat-num">10x</span>
-                    <span className="cdash-hero-stat-label">Faster</span>
-                  </div>
-                  <div className="cdash-hero-stat-div" />
-                  <div className="cdash-hero-stat">
-                    <span className="cdash-hero-stat-num">95%</span>
-                    <span className="cdash-hero-stat-label">Accuracy</span>
-                  </div>
-                  <div className="cdash-hero-stat-div" />
-                  <div className="cdash-hero-stat">
-                    <span className="cdash-hero-stat-num">Free</span>
-                    <span className="cdash-hero-stat-label">Always</span>
-                  </div>
+              </div>
+              <div className="cdash-hero-right">
+                <div className="cdash-hero-stat-box">
+                  <span className="cdash-hero-stat-num">10x</span>
+                  <span className="cdash-hero-stat-label">Faster Screening</span>
+                </div>
+                <div className="cdash-hero-stat-box">
+                  <span className="cdash-hero-stat-num">95%</span>
+                  <span className="cdash-hero-stat-label">Match Accuracy</span>
+                </div>
+                <div className="cdash-hero-stat-box">
+                  <span className="cdash-hero-stat-num">Free</span>
+                  <span className="cdash-hero-stat-label">Always</span>
                 </div>
               </div>
+            </div>
 
-              {/* Right — all 5 cards in a 2-col grid */}
-              <div className="cdash-cards-right">
-                {menuCards.map(card => (
-                  <button key={card.id} className="cdash-menu-card-sm" onClick={() => setView(card.id)}>
-                    <div className="cdash-card-icon-sm" style={{ background: card.bg, color: card.color }}>
-                      {card.icon}
-                    </div>
-                    <div>
-                      <div className="cdash-card-label-sm">{card.label}</div>
-                      <div className="cdash-card-desc-sm">{card.desc}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
+            {/* 3 big cards — top row */}
+            <div className="cdash-row-3">
+              {menuCards.slice(0, 3).map(card => (
+                <button key={card.id} className="cdash-big-card" onClick={() => setView(card.id)}>
+                  <div className="cdash-big-card-icon" style={{ background: card.bg, color: card.color }}>
+                    {card.icon}
+                  </div>
+                  <div className="cdash-big-card-label">{card.label}</div>
+                  <div className="cdash-big-card-desc">{card.desc}</div>
+                </button>
+              ))}
+            </div>
 
+            {/* 2 big cards — bottom row */}
+            <div className="cdash-row-2">
+              {menuCards.slice(3).map(card => (
+                <button key={card.id} className="cdash-big-card" onClick={() => setView(card.id)}>
+                  <div className="cdash-big-card-icon" style={{ background: card.bg, color: card.color }}>
+                    {card.icon}
+                  </div>
+                  <div className="cdash-big-card-label">{card.label}</div>
+                  <div className="cdash-big-card-desc">{card.desc}</div>
+                </button>
+              ))}
             </div>
           </>
         )}

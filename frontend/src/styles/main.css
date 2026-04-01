@@ -1655,3 +1655,112 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important;
 @media (max-width: 400px) {
   .cdash-cards-right { grid-template-columns: 1fr; }
 }
+
+/* ══════════════════════════════════════
+   Dashboard — Full Width Layout
+══════════════════════════════════════ */
+
+/* Override page container to use full width */
+.cdash-page {
+  max-width: 100% !important;
+  padding: 28px 48px !important;
+  box-sizing: border-box;
+}
+
+/* ── Full-width Hero Banner ── */
+.cdash-hero-full {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 32px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.12) 60%, rgba(15,15,26,0) 100%);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 24px; padding: 36px 48px;
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.cdash-hero-full::before {
+  content: ''; position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+  top: -120px; right: -80px; pointer-events: none;
+}
+
+.cdash-hero-left { flex: 1; }
+
+.cdash-hero-big-title {
+  font-size: 38px; font-weight: 900; color: #fff;
+  line-height: 1.15; margin: 14px 0 16px; letter-spacing: -1px;
+}
+.cdash-hero-big-quote {
+  font-size: 14px; color: #64748b; line-height: 1.7; font-style: italic;
+}
+
+.cdash-hero-right {
+  display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;
+}
+.cdash-hero-stat-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 14px 28px; text-align: center;
+  min-width: 120px;
+}
+.cdash-hero-stat-box .cdash-hero-stat-num  { display: block; font-size: 28px; font-weight: 900; color: #fff; }
+.cdash-hero-stat-box .cdash-hero-stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; display: block; }
+
+/* ── 3-card top row ── */
+.cdash-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px; margin-bottom: 18px;
+}
+
+/* ── 2-card bottom row ── */
+.cdash-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+/* ── Big card style ── */
+.cdash-big-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 32px 28px;
+  text-align: left; cursor: pointer;
+  transition: all 0.22s; display: flex;
+  flex-direction: column; gap: 14px;
+  margin-top: 0; box-shadow: none; font-family: inherit;
+  width: 100%;
+}
+.cdash-big-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99,102,241,0.4);
+  background: rgba(99,102,241,0.08);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+}
+
+.cdash-big-card-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.cdash-big-card-label {
+  font-size: 18px; font-weight: 800; color: #f1f5f9;
+}
+.cdash-big-card-desc {
+  font-size: 13px; color: #64748b; line-height: 1.55;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .cdash-page { padding: 20px 24px !important; }
+  .cdash-hero-full { flex-direction: column; padding: 28px 24px; }
+  .cdash-hero-right { flex-direction: row; }
+  .cdash-hero-big-title { font-size: 28px; }
+  .cdash-row-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .cdash-page { padding: 16px !important; }
+  .cdash-row-3, .cdash-row-2 { grid-template-columns: 1fr; }
+  .cdash-hero-right { flex-direction: row; gap: 8px; }
+  .cdash-hero-stat-box { padding: 10px 16px; min-width: 80px; }
+  .cdash-hero-big-title { font-size: 22px; }
+}
