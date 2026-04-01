@@ -31,14 +31,6 @@ function Home() {
           Smarter hiring starts here. Match candidates to roles instantly,
           uncover skill gaps, and make confident decisions — all in one place.
         </p>
-        <div className="hero-cta-row">
-          <Link to="/select-role">
-            <button className="btn-accent btn-lg">Get Started Free</button>
-          </Link>
-          <Link to="/select-role">
-            <button className="btn-ghost-dark btn-lg">Sign In</button>
-          </Link>
-        </div>
         <div className="hero-stats">
           <div className="hero-stat">
             <span className="stat-num">10x</span>
@@ -116,10 +108,7 @@ function Home() {
       {/* CTA Banner */}
       <section className="cta-banner">
         <h2>Ready to hire smarter?</h2>
-        <p>Join CVScanner and take the guesswork out of recruitment.</p>
-        <Link to="/select-role">
-          <button className="btn-accent btn-lg">Create Your Account</button>
-        </Link>
+        <p>Sign in above to get started with CVScanner.</p>
       </section>
 
       <footer className="landing-footer">
