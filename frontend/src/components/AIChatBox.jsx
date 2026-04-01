@@ -151,11 +151,6 @@ function AIChatBox() {
     try { recognitionRef.current?.stop(); } catch {}
     setListening(false);
   };
-
-  const handleMicClick = () => {
-    if (listening) stopListening();
-    else startListening();
-  };
   // ── Send Message ──────────────────────────────────────────────────────────
   const sendMessage = async (overrideText) => {
     const text = typeof overrideText === 'string' ? overrideText.trim() : input.trim();
