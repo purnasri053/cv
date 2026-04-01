@@ -36,7 +36,64 @@ function Confetti() {
   );
 }
 
-function CandidateAnalysisPage() {
+// Job recommendations based on skills
+const JOB_RECOMMENDATIONS = [
+  { title: 'Software Engineer', skills: ['Java','Python','JavaScript','Git'], link: 'https://www.linkedin.com/jobs/search/?keywords=software+engineer' },
+  { title: 'Frontend Developer', skills: ['React','JavaScript','Html','Css'], link: 'https://www.linkedin.com/jobs/search/?keywords=frontend+developer' },
+  { title: 'Backend Developer', skills: ['Java','Python','Sql','Rest Api'], link: 'https://www.linkedin.com/jobs/search/?keywords=backend+developer' },
+  { title: 'Full Stack Developer', skills: ['React','Node.Js','Sql','Git'], link: 'https://www.linkedin.com/jobs/search/?keywords=full+stack+developer' },
+  { title: 'Data Scientist', skills: ['Python','Machine Learning','Sql','Data Analysis'], link: 'https://www.linkedin.com/jobs/search/?keywords=data+scientist' },
+  { title: 'ML Engineer', skills: ['Python','Machine Learning','Tensorflow','Deep Learning'], link: 'https://www.linkedin.com/jobs/search/?keywords=machine+learning+engineer' },
+  { title: 'DevOps Engineer', skills: ['Docker','Kubernetes','Aws','Linux'], link: 'https://www.linkedin.com/jobs/search/?keywords=devops+engineer' },
+  { title: 'VLSI Engineer', skills: ['Verilog','Vhdl','Vlsi','Fpga'], link: 'https://www.linkedin.com/jobs/search/?keywords=vlsi+engineer' },
+  { title: 'Embedded Engineer', skills: ['C','C++','Embedded Systems','Rtos'], link: 'https://www.linkedin.com/jobs/search/?keywords=embedded+systems+engineer' },
+  { title: 'Android Developer', skills: ['Android','Java','Kotlin'], link: 'https://www.linkedin.com/jobs/search/?keywords=android+developer' },
+  { title: 'Data Analyst', skills: ['Sql','Excel','Power Bi','Data Analysis'], link: 'https://www.linkedin.com/jobs/search/?keywords=data+analyst' },
+  { title: 'Cloud Engineer', skills: ['Aws','Azure','Docker','Linux'], link: 'https://www.linkedin.com/jobs/search/?keywords=cloud+engineer' },
+];
+
+function getJobRecommendations(extractedSkills) {
+  return JOB_RECOMMENDATIONS
+    .map(job => {
+      const matched = job.skills.filter(s => extractedSkills.includes(s)).length;
+      const score = Math.round((matched / job.skills.length) * 100);
+      return { ...job, score, matched };
+    })
+    .filter(j => j.score >= 25)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4);
+}
+const SKILL_RESOURCES = {
+  'Python':           { url: 'https://www.python.org/about/gettingstarted/', label: 'Python.org' },
+  'Java':             { url: 'https://dev.java/learn/', label: 'dev.java' },
+  'JavaScript':       { url: 'https://javascript.info', label: 'javascript.info' },
+  'React':            { url: 'https://react.dev/learn', label: 'react.dev' },
+  'Node.Js':          { url: 'https://nodejs.org/en/learn', label: 'nodejs.org' },
+  'Machine Learning': { url: 'https://www.coursera.org/learn/machine-learning', label: 'Coursera ML' },
+  'Deep Learning':    { url: 'https://www.deeplearning.ai', label: 'deeplearning.ai' },
+  'Sql':              { url: 'https://www.w3schools.com/sql/', label: 'W3Schools SQL' },
+  'Docker':           { url: 'https://docs.docker.com/get-started/', label: 'Docker Docs' },
+  'Aws':              { url: 'https://aws.amazon.com/training/', label: 'AWS Training' },
+  'Git':              { url: 'https://git-scm.com/book/en/v2', label: 'Pro Git Book' },
+  'Spring Boot':      { url: 'https://spring.io/guides', label: 'Spring Guides' },
+  'Tensorflow':       { url: 'https://www.tensorflow.org/tutorials', label: 'TF Tutorials' },
+  'Pytorch':          { url: 'https://pytorch.org/tutorials/', label: 'PyTorch Tutorials' },
+  'Verilog':          { url: 'https://www.asic-world.com/verilog/veritut.html', label: 'ASIC World' },
+  'Vhdl':             { url: 'https://www.ics.uci.edu/~jmoorkan/vhdlref/', label: 'VHDL Ref' },
+  'Flutter':          { url: 'https://flutter.dev/learn', label: 'flutter.dev' },
+  'Kotlin':           { url: 'https://kotlinlang.org/docs/getting-started.html', label: 'Kotlin Docs' },
+  'Typescript':       { url: 'https://www.typescriptlang.org/docs/', label: 'TS Docs' },
+  'Nlp':              { url: 'https://www.nltk.org/book/', label: 'NLTK Book' },
+  'Data Analysis':    { url: 'https://www.kaggle.com/learn/pandas', label: 'Kaggle Pandas' },
+  'Power Bi':         { url: 'https://learn.microsoft.com/en-us/power-bi/', label: 'MS Learn' },
+  'Kubernetes':       { url: 'https://kubernetes.io/docs/tutorials/', label: 'K8s Tutorials' },
+  'C++':              { url: 'https://www.learncpp.com', label: 'learncpp.com' },
+  'C':                { url: 'https://www.learn-c.org', label: 'learn-c.org' },
+};
+
+function getResource(skill) {
+  return SKILL_RESOURCES[skill] || { url: `https://www.google.com/search?q=learn+${encodeURIComponent(skill)}`, label: 'Search Google' };
+}
   const navigate = useNavigate();
   const [showConfetti, setShowConfetti] = useState(false);
   const storedData = JSON.parse(localStorage.getItem('candidateAnalysisData'));
@@ -199,22 +256,58 @@ function CandidateAnalysisPage() {
               </p>
             )}
             <div className="suggestions-list">
-              {missingSkills.map((skill, i) => (
-                <div className="suggestion-item" key={i}>
-                  <div className="suggestion-num">{i + 1}</div>
-                  <div>
-                    <strong>{skill}</strong>
-                    <p>
-                      {isExcellent
-                        ? `Adding ${skill} to your profile will make you an even stronger candidate for senior roles.`
-                        : `Build projects or get certified in ${skill} and add it to your resume to boost your match score.`}
-                    </p>
+              {missingSkills.map((skill, i) => {
+                const res = getResource(skill);
+                return (
+                  <div className="suggestion-item" key={i}>
+                    <div className="suggestion-num">{i + 1}</div>
+                    <div>
+                      <strong>{skill}</strong>
+                      <p>
+                        {isExcellent
+                          ? `Adding ${skill} to your profile will make you an even stronger candidate for senior roles.`
+                          : `Build projects or get certified in ${skill} and add it to your resume to boost your match score.`}
+                      </p>
+                      <a href={res.url} target="_blank" rel="noopener noreferrer" className="skill-resource-link">
+                        📚 Learn {skill} → {res.label}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
+
+        {/* Job Recommendations */}
+        {extractedSkills.length > 0 && (() => {
+          const jobs = getJobRecommendations(extractedSkills);
+          if (jobs.length === 0) return null;
+          return (
+            <div className="results-card" style={{ marginTop: 20 }}>
+              <div className="results-card-header">
+                <span style={{ fontSize: 18 }}>💼</span>
+                <h3>Recommended Jobs Based on Your Skills</h3>
+              </div>
+              <div className="job-reco-grid">
+                {jobs.map((job, i) => (
+                  <a key={i} href={job.link} target="_blank" rel="noopener noreferrer" className="job-reco-card">
+                    <div className="job-reco-title">{job.title}</div>
+                    <div className="job-reco-score" style={{ color: job.score >= 75 ? '#4ade80' : job.score >= 50 ? '#fbbf24' : '#a5b4fc' }}>
+                      {job.score}% match
+                    </div>
+                    <div className="job-reco-skills">
+                      {job.skills.slice(0, 3).map((s, j) => (
+                        <span key={j} className={`skill-tag ${extractedSkills.includes(s) ? 'skill-tag-green' : 'skill-tag-red'}`}>{s}</span>
+                      ))}
+                    </div>
+                    <div className="job-reco-link">View on LinkedIn →</div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
       </div>
     </div>
