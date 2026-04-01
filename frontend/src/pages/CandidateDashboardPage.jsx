@@ -161,15 +161,15 @@ function CandidateDashboardPage() {
                 <FaArrowLeft /> Dashboard
               </button>
             )}
-            <h1 className="cdash-title">
-              {view === 'home'    && `Hey ${candidateUser.full_name.split(' ')[0]} 👋`}
-              {view === 'analyze' && 'Analyze Resume'}
-              {view === 'courses' && 'Courses'}
-              {view === 'profile' && 'My Profile'}
-              {view === 'calendar'&& 'Calendar'}
-              {view === 'help'    && 'Help & FAQ'}
-            </h1>
-            {view === 'home' && <p className="cdash-sub">What would you like to do today?</p>}
+            {view !== 'home' && (
+              <h1 className="cdash-title">
+                {view === 'analyze' && 'Analyze Resume'}
+                {view === 'courses' && 'Courses'}
+                {view === 'profile' && 'My Profile'}
+                {view === 'calendar' && 'Calendar'}
+                {view === 'help'    && 'Help & FAQ'}
+              </h1>
+            )}
           </div>
           <div style={{ position: 'relative' }}>
             <button className="notif-bell" onClick={() => setShowNotif(s => !s)}>
@@ -196,19 +196,60 @@ function CandidateDashboardPage() {
 
         {error && <div className="dash-error"><FaTimesCircle /> {error}</div>}
 
-        {/* ── HOME VIEW — 5 big cards ── */}
+        {/* ── HOME VIEW — 3 top + 2 bottom ── */}
         {view === 'home' && (
-          <div className="cdash-menu-grid">
-            {menuCards.map(card => (
-              <button key={card.id} className="cdash-menu-card" onClick={() => setView(card.id)}>
-                <div className="cdash-card-icon" style={{ background: card.bg, color: card.color }}>
-                  {card.icon}
+          <>
+            {/* Motivational Hero */}
+            <div className="cdash-hero">
+              <div className="cdash-hero-badge">✨ AI-Powered Career Assistant</div>
+              <h2 className="cdash-hero-title">
+                Ready to land your<br />
+                <span className="cdash-hero-highlight">dream job, {candidateUser.full_name.split(' ')[0]}?</span>
+              </h2>
+              <p className="cdash-hero-quote">
+                "Every expert was once a beginner. Every pro was once an amateur.<br />
+                Your next opportunity starts with one upload." 🚀
+              </p>
+              <div className="cdash-hero-stats">
+                <div className="cdash-hero-stat">
+                  <span className="cdash-hero-stat-num">10x</span>
+                  <span className="cdash-hero-stat-label">Faster Screening</span>
                 </div>
-                <div className="cdash-card-label">{card.label}</div>
-                <div className="cdash-card-desc">{card.desc}</div>
-              </button>
-            ))}
-          </div>
+                <div className="cdash-hero-stat-div" />
+                <div className="cdash-hero-stat">
+                  <span className="cdash-hero-stat-num">95%</span>
+                  <span className="cdash-hero-stat-label">Match Accuracy</span>
+                </div>
+                <div className="cdash-hero-stat-div" />
+                <div className="cdash-hero-stat">
+                  <span className="cdash-hero-stat-num">Free</span>
+                  <span className="cdash-hero-stat-label">Always</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3 cards top row */}
+            <div className="cdash-menu-grid-top">
+              {menuCards.slice(0, 3).map(card => (
+                <button key={card.id} className="cdash-menu-card" onClick={() => setView(card.id)}>
+                  <div className="cdash-card-icon" style={{ background: card.bg, color: card.color }}>{card.icon}</div>
+                  <div className="cdash-card-label">{card.label}</div>
+                  <div className="cdash-card-desc">{card.desc}</div>
+                </button>
+              ))}
+            </div>
+
+            {/* 2 cards bottom row */}
+            <div className="cdash-menu-grid-bottom">
+              {menuCards.slice(3).map(card => (
+                <button key={card.id} className="cdash-menu-card cdash-menu-card-wide" onClick={() => setView(card.id)}>
+                  <div className="cdash-card-icon" style={{ background: card.bg, color: card.color }}>{card.icon}</div>
+                  <div className="cdash-card-label">{card.label}</div>
+                  <div className="cdash-card-desc">{card.desc}</div>
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         {/* ── ANALYZE VIEW ── */}
