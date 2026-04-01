@@ -1,7 +1,53 @@
 import { Link } from 'react-router-dom';
-import { FaUpload, FaBrain, FaChartBar, FaUserCheck, FaFileAlt } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaUpload, FaBrain, FaChartBar, FaUserCheck, FaFileAlt, FaDownload } from 'react-icons/fa';
 
 function Home() {
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    // Don't show if already dismissed or installed
+    if (sessionStorage.getItem('pwa-dismissed')) return;
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (standalone) return;
+
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isIOS) {
+      setTimeout(() => setShowBanner(true), 1500);
+      return;
+    }
+
+    const handler = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setShowBanner(true);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+
+    // Fallback for Android/Desktop if no prompt fires
+    const fallback = setTimeout(() => setShowBanner(true), 3000);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      clearTimeout(fallback);
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+    }
+    setShowBanner(false);
+    sessionStorage.setItem('pwa-dismissed', '1');
+  };
+
+  const handleDismiss = () => {
+    setShowBanner(false);
+    sessionStorage.setItem('pwa-dismissed', '1');
+  };
   return (
     <div className="landing-page">
 
@@ -118,6 +164,22 @@ function Home() {
         </div>
         <p>© 2026 CVScanner. AI Resume Screening Platform.</p>
       </footer>
+
+      {/* Install Banner */}
+      {showBanner && (
+        <div className="home-install-banner">
+          <span className="home-install-emoji">📱</span>
+          <span className="home-install-text">
+            Install CVScanner for a better experience 🚀
+          </span>
+          <button className="home-install-btn" onClick={handleInstall}>
+            <FaDownload /> Install
+          </button>
+          <button className="home-dismiss-btn" onClick={handleDismiss}>
+            Dismiss
+          </button>
+        </div>
+      )}
 
     </div>
   );
