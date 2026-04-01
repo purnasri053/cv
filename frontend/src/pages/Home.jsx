@@ -4,35 +4,20 @@ import { FaUpload, FaBrain, FaChartBar, FaUserCheck, FaFileAlt, FaDownload } fro
 
 function Home() {
   const [installPrompt, setInstallPrompt] = useState(null);
-  const [showBanner, setShowBanner] = useState(false);
+  const [showBanner, setShowBanner] = useState(true); // always show on homepage
 
   useEffect(() => {
-    // Always show on homepage — reset any old dismissal
-    sessionStorage.removeItem('pwa-dismissed');
+    // Already installed — hide banner
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (standalone) return;
+    if (standalone) { setShowBanner(false); return; }
 
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isIOS) {
-      setTimeout(() => setShowBanner(true), 800);
-      return;
-    }
-
+    // Capture native install prompt if available
     const handler = (e) => {
       e.preventDefault();
       setInstallPrompt(e);
-      setShowBanner(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
-
-    // Always show after 1s regardless
-    const fallback = setTimeout(() => setShowBanner(true), 1000);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-      clearTimeout(fallback);
-    };
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstall = async () => {
