@@ -1,12 +1,12 @@
 /**
- * CVScanner PWA Install Banner
- * - Shows only on mobile
- * - Shows only once (localStorage)
- * - Does NOT interfere with any existing UI
- * - Fails silently if anything goes wrong
+ * CVScanner PWA Install Popup
+ * - Shows on ALL devices when site is installable
+ * - Triggers native browser install prompt
+ * - Dismissable, remembers dismissal
  */
 
 import { useState, useEffect } from 'react';
+import { FaFileAlt, FaTimes, FaDownload } from 'react-icons/fa';
 import { triggerInstall, isInstallable } from './registerSW';
 
 function InstallBanner() {
@@ -15,30 +15,28 @@ function InstallBanner() {
 
   useEffect(() => {
     try {
-      // Only show on mobile
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      // Only show once
-      const dismissed = localStorage.getItem('pwa-banner-dismissed');
-      // Only in production
-      const isProd = import.meta.env.PROD;
+      // Don't show if already dismissed this session
+      const dismissed = sessionStorage.getItem('pwa-dismissed');
+      if (dismissed) return;
 
-      if (!isMobile || dismissed || !isProd) return;
-
-      // Check if already installable
+      // Show immediately if already installable
       if (isInstallable()) {
         setCanInstall(true);
         setShow(true);
       }
 
-      // Listen for install prompt
+      // Listen for install prompt event
       const onInstallable = () => {
-        setCanInstall(true);
-        setShow(true);
+        const alreadyDismissed = sessionStorage.getItem('pwa-dismissed');
+        if (!alreadyDismissed) {
+          setCanInstall(true);
+          setShow(true);
+        }
       };
-      window.addEventListener('pwa-installable', onInstallable);
 
-      // Hide after install
       const onInstalled = () => setShow(false);
+
+      window.addEventListener('pwa-installable', onInstallable);
       window.addEventListener('pwa-installed', onInstalled);
 
       return () => {
@@ -50,46 +48,64 @@ function InstallBanner() {
     }
   }, []);
 
-  const handleInstall = () => {
+  const handleInstall = async () => {
     try {
-      triggerInstall();
-      setShow(false);
-      localStorage.setItem('pwa-banner-dismissed', '1');
+      await triggerInstall();
     } catch {
-      setShow(false);
+      // ignore
     }
+    setShow(false);
+    sessionStorage.setItem('pwa-dismissed', '1');
   };
 
   const handleDismiss = () => {
     setShow(false);
-    localStorage.setItem('pwa-banner-dismissed', '1');
+    sessionStorage.setItem('pwa-dismissed', '1');
   };
 
   if (!show) return null;
 
   return (
-    <div className="pwa-banner" role="banner" aria-label="Install app">
-      <div className="pwa-banner-content">
-        <span className="pwa-banner-icon">📱</span>
-        <span className="pwa-banner-text">
-          Install CVScanner for a better experience
-        </span>
-      </div>
-      <div className="pwa-banner-actions">
+    <>
+      {/* Backdrop */}
+      <div className="pwa-backdrop" onClick={handleDismiss} />
+
+      {/* Popup */}
+      <div className="pwa-popup" role="dialog" aria-label="Install CVScanner">
+        <button className="pwa-popup-close" onClick={handleDismiss} aria-label="Close">
+          <FaTimes />
+        </button>
+
+        <div className="pwa-popup-icon">
+          <FaFileAlt />
+        </div>
+
+        <h3 className="pwa-popup-title">Install CVScanner</h3>
+        <p className="pwa-popup-desc">
+          Add CVScanner to your home screen for quick access — works like a native app, even offline.
+        </p>
+
+        <div className="pwa-popup-features">
+          <div className="pwa-feature">⚡ Instant launch</div>
+          <div className="pwa-feature">📱 Native app feel</div>
+          <div className="pwa-feature">🔒 No app store needed</div>
+        </div>
+
         {canInstall ? (
-          <button className="pwa-btn-install" onClick={handleInstall}>
-            Install
+          <button className="pwa-popup-btn" onClick={handleInstall}>
+            <FaDownload /> Install App
           </button>
         ) : (
-          <span className="pwa-banner-hint">
-            Open in Chrome → Add to Home Screen
-          </span>
+          <div className="pwa-popup-manual">
+            <p>Tap <strong>Share</strong> → <strong>Add to Home Screen</strong> in your browser</p>
+          </div>
         )}
-        <button className="pwa-btn-dismiss" onClick={handleDismiss} aria-label="Dismiss">
-          ✕
+
+        <button className="pwa-popup-skip" onClick={handleDismiss}>
+          Not now
         </button>
       </div>
-    </div>
+    </>
   );
 }
 
