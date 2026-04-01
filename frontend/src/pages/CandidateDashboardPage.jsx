@@ -185,35 +185,18 @@ function CandidateDashboardPage() {
 
       <div className="dash-layout">
 
-        {/* ── Sidebar (desktop) ── */}
+        {/* ── Sidebar — user info only, no tabs ── */}
         <aside className="dash-sidebar">
           <div className="dash-avatar">{initials}</div>
           <div className="dash-user-name">{candidateUser.full_name}</div>
           <div className="dash-user-role">Candidate</div>
           <div className="dash-user-email">{candidateUser.email}</div>
-          <div className="dash-sidebar-steps" style={{ marginTop: 32 }}>
-            {tabs.map(t => (
-              <div
-                key={t.id}
-                className={`dash-nav-item ${activeTab === t.id ? 'dash-nav-active' : ''}`}
-                onClick={() => setActiveTab(t.id)}
-              >
-                <span className="dash-nav-icon">{t.icon}</span>
-                <span>{t.label}</span>
-                {t.id === 'courses' && savedCourses.length > 0 && (
-                  <span className="notif-badge" style={{ position: 'static', marginLeft: 'auto' }}>
-                    {savedCourses.length}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
         </aside>
 
         {/* ── Main Content ── */}
         <main className="dash-main">
 
-          {/* Header */}
+          {/* Header with notification bell */}
           <div className="dash-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <h1>Welcome back, {candidateUser.full_name.split(' ')[0]} 👋</h1>
@@ -231,11 +214,8 @@ function CandidateDashboardPage() {
                     <button onClick={() => setShowNotif(false)}><FaTimes /></button>
                   </div>
                   {notifications.map(n => (
-                    <div
-                      key={n.id}
-                      className={`notif-item ${!n.read ? 'notif-unread' : ''}`}
-                      onClick={() => markNotifRead(n.id)}
-                    >
+                    <div key={n.id} className={`notif-item ${!n.read ? 'notif-unread' : ''}`}
+                      onClick={() => markNotifRead(n.id)}>
                       <div className="notif-text">{n.text}</div>
                       <div className="notif-time">{n.time}</div>
                     </div>
@@ -245,9 +225,24 @@ function CandidateDashboardPage() {
             </div>
           </div>
 
-          {error && (
-            <div className="dash-error"><FaTimesCircle /> {error}</div>
-          )}
+          {/* ── Horizontal Tab Bar ── */}
+          <div className="dash-top-tabs">
+            {tabs.map(t => (
+              <button
+                key={t.id}
+                className={`dash-top-tab ${activeTab === t.id ? 'dash-top-tab-active' : ''}`}
+                onClick={() => setActiveTab(t.id)}
+              >
+                <span className="dash-top-tab-icon">{t.icon}</span>
+                <span>{t.label}</span>
+                {t.id === 'courses' && savedCourses.length > 0 && (
+                  <span className="dash-tab-badge">{savedCourses.length}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {error && <div className="dash-error"><FaTimesCircle /> {error}</div>}
 
           {/* ── ANALYZE TAB ── */}
           {activeTab === 'analyze' && (
