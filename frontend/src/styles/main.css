@@ -1447,3 +1447,67 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important;
   background: none; border: none; color: #fbbf24;
   cursor: pointer; font-size: 14px; margin-top: 0; box-shadow: none; padding: 4px;
 }
+
+/* ── Candidate Dashboard Home ── */
+.cdash-page { max-width: 1000px; margin: 0 auto; padding: 36px 40px; }
+
+.cdash-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 32px;
+}
+.cdash-title { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
+.cdash-sub   { font-size: 15px; color: #475569; }
+
+.cdash-back-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05); color: #94a3b8;
+  border: 1px solid rgba(255,255,255,0.08); padding: 7px 16px;
+  border-radius: 10px; font-size: 13px; font-weight: 600;
+  cursor: pointer; margin-top: 0; box-shadow: none;
+  margin-bottom: 12px; font-family: inherit; transition: all 0.15s;
+}
+.cdash-back-btn:hover { color: #fff; background: rgba(255,255,255,0.09); transform: none; }
+
+/* 5-card grid */
+.cdash-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.cdash-menu-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 28px 22px;
+  text-align: left; cursor: pointer;
+  transition: all 0.22s; display: flex;
+  flex-direction: column; gap: 10px;
+  margin-top: 0; box-shadow: none; font-family: inherit;
+}
+.cdash-menu-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99,102,241,0.35);
+  background: rgba(99,102,241,0.07);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+
+.cdash-card-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.cdash-card-label {
+  font-size: 16px; font-weight: 800; color: #f1f5f9;
+}
+.cdash-card-desc {
+  font-size: 13px; color: #64748b; line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .cdash-page { padding: 20px 16px; }
+  .cdash-menu-grid { grid-template-columns: repeat(2, 1fr); }
+  .cdash-title { font-size: 22px; }
+}
+@media (max-width: 400px) {
+  .cdash-menu-grid { grid-template-columns: 1fr; }
+}
