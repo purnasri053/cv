@@ -7,33 +7,44 @@ function Home() {
   const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
-    // Already installed — hide banner
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (standalone) { setShowBanner(false); return; }
 
-    // Capture native install prompt if available
+    // Capture the beforeinstallprompt event as early as possible
     const handler = (e) => {
       e.preventDefault();
       setInstallPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handler);
+
+    window.addEventListener('appinstalled', () => {
+      setShowBanner(false);
+      setInstallPrompt(null);
+    });
+
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstall = async () => {
     if (installPrompt) {
-      // Native install prompt available — use it
-      try {
-        installPrompt.prompt();
-        const result = await installPrompt.userChoice;
-        if (result.outcome === 'accepted') {
-          setShowBanner(false);
-          sessionStorage.setItem('pwa-dismissed', '1');
-        }
-      } catch {}
+      // Native Chrome install — this actually installs to home screen
+      installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setShowBanner(false);
+        setInstallPrompt(null);
+      }
     } else {
-      // No native prompt yet — show Chrome instructions
-      alert('To install CVScanner:\n\n📱 Android: Tap the ⋮ menu (top right in Chrome) → "Add to Home Screen" or "Install App"\n\n🍎 iPhone: Tap Share button → "Add to Home Screen"');
+      // Fallback instructions
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isAndroid) {
+        alert('To install:\n1. Tap the ⋮ menu in Chrome (top right)\n2. Tap "Add to Home Screen"\n3. Tap "Install"');
+      } else if (isIOS) {
+        alert('To install:\n1. Tap the Share button at the bottom\n2. Tap "Add to Home Screen"\n3. Tap "Add"');
+      } else {
+        alert('To install:\nClick the install icon (⊕) in your browser address bar, or use the browser menu → "Install CVScanner"');
+      }
     }
   };
 
