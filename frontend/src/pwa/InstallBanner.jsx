@@ -1,62 +1,79 @@
 /**
  * CVScanner PWA Install Popup
- * Works on Android (native prompt) + iOS (manual instructions)
- * Shows on first visit, remembers dismissal
+ * - Android: waits for beforeinstallprompt, falls back to manual instructions
+ * - iOS Safari: always shows manual instructions
+ * - Shows on first visit only
  */
 
 import { useState, useEffect } from 'react';
-import { FaFileAlt, FaTimes, FaDownload, FaShareAlt } from 'react-icons/fa';
+import { FaFileAlt, FaTimes, FaDownload, FaShareAlt, FaEllipsisV } from 'react-icons/fa';
 
 function InstallBanner() {
-  const [show, setShow] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [show, setShow]               = useState(false);
+  const [platform, setPlatform]       = useState(''); // 'ios' | 'android' | 'desktop'
+  const [deferredPrompt, setDeferred] = useState(null);
 
   useEffect(() => {
-    try {
-      // Don't show if dismissed this session
-      if (sessionStorage.getItem('pwa-dismissed')) return;
+    // Already dismissed this session
+    if (sessionStorage.getItem('pwa-dismissed')) return;
 
-      // Detect iOS
-      const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
-        || window.navigator.standalone;
+    // Already installed (running in standalone mode)
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+    if (standalone) return;
 
-      setIsIOS(ios);
+    const ua = navigator.userAgent;
+    const isIOS     = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
+    const isMobile  = isIOS || isAndroid;
 
-      // Already installed — don't show
-      if (isInStandaloneMode) return;
+    if (isIOS) {
+      setPlatform('ios');
+      // iOS Safari — always show manual instructions after 2s
+      setTimeout(() => setShow(true), 2000);
+      return;
+    }
 
-      // iOS — show manual instructions after 2 seconds
-      if (ios) {
-        setTimeout(() => setShow(true), 2000);
-        return;
-      }
+    if (isAndroid || !isMobile) {
+      setPlatform(isAndroid ? 'android' : 'desktop');
 
-      // Android/Desktop — wait for beforeinstallprompt
+      // Listen for native install prompt
       const handler = (e) => {
         e.preventDefault();
-        setDeferredPrompt(e);
+        setDeferred(e);
         setTimeout(() => setShow(true), 1500);
       };
-
       window.addEventListener('beforeinstallprompt', handler);
-      return () => window.removeEventListener('beforeinstallprompt', handler);
-    } catch {
-      // Fail silently
+
+      // Fallback: if no prompt fires within 4s, show manual instructions anyway
+      const fallback = setTimeout(() => {
+        setShow(true);
+      }, 4000);
+
+      window.addEventListener('appinstalled', () => {
+        clearTimeout(fallback);
+        setShow(false);
+      });
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handler);
+        clearTimeout(fallback);
+      };
     }
   }, []);
 
   const handleInstall = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
+      try {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } catch {}
     }
-    setShow(false);
-    sessionStorage.setItem('pwa-dismissed', '1');
+    dismiss();
   };
 
-  const handleDismiss = () => {
+  const dismiss = () => {
     setShow(false);
     sessionStorage.setItem('pwa-dismissed', '1');
   };
@@ -65,14 +82,16 @@ function InstallBanner() {
 
   return (
     <>
-      <div className="pwa-backdrop" onClick={handleDismiss} />
-      <div className="pwa-popup" role="dialog">
-        <button className="pwa-popup-close" onClick={handleDismiss}><FaTimes /></button>
+      <div className="pwa-backdrop" onClick={dismiss} />
+      <div className="pwa-popup" role="dialog" aria-modal="true">
+        <button className="pwa-popup-close" onClick={dismiss} aria-label="Close">
+          <FaTimes />
+        </button>
 
         <div className="pwa-popup-icon"><FaFileAlt /></div>
         <h3 className="pwa-popup-title">Install CVScanner</h3>
         <p className="pwa-popup-desc">
-          Add to your home screen for instant access — works like a native app.
+          Add CVScanner to your home screen for instant access — works like a native app.
         </p>
 
         <div className="pwa-popup-features">
@@ -81,18 +100,32 @@ function InstallBanner() {
           <div className="pwa-feature">🔒 No app store</div>
         </div>
 
-        {isIOS ? (
-          <div className="pwa-popup-manual">
-            <FaShareAlt style={{ color: '#818cf8', marginBottom: 8, fontSize: 20 }} />
-            <p>Tap <strong>Share</strong> at the bottom of Safari, then tap <strong>"Add to Home Screen"</strong></p>
-          </div>
-        ) : (
+        {/* Android with native prompt */}
+        {deferredPrompt && (
           <button className="pwa-popup-btn" onClick={handleInstall}>
             <FaDownload /> Install App
           </button>
         )}
 
-        <button className="pwa-popup-skip" onClick={handleDismiss}>Not now</button>
+        {/* iOS Safari instructions */}
+        {platform === 'ios' && (
+          <div className="pwa-popup-manual">
+            <FaShareAlt style={{ color: '#818cf8', fontSize: 22, marginBottom: 10 }} />
+            <p>Tap the <strong>Share</strong> button <FaShareAlt style={{ display: 'inline', verticalAlign: 'middle' }} /> at the bottom of Safari</p>
+            <p style={{ marginTop: 8 }}>Then tap <strong>"Add to Home Screen"</strong></p>
+          </div>
+        )}
+
+        {/* Android/Desktop without native prompt (Chrome menu fallback) */}
+        {!deferredPrompt && platform !== 'ios' && (
+          <div className="pwa-popup-manual">
+            <FaEllipsisV style={{ color: '#818cf8', fontSize: 22, marginBottom: 10 }} />
+            <p>Tap the <strong>⋮ menu</strong> in Chrome</p>
+            <p style={{ marginTop: 8 }}>Then tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></p>
+          </div>
+        )}
+
+        <button className="pwa-popup-skip" onClick={dismiss}>Not now</button>
       </div>
     </>
   );
