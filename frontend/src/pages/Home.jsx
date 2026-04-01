@@ -4,7 +4,7 @@ import { FaUpload, FaBrain, FaChartBar, FaUserCheck, FaFileAlt, FaDownload } fro
 
 function Home() {
   const [installPrompt, setInstallPrompt] = useState(null);
-  const [showBanner, setShowBanner] = useState(true); // always show on homepage
+  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     // Already installed — hide banner

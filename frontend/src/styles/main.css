@@ -1081,10 +1081,14 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important;
 .install-topbar {
   width: 100%;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 20px;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
   animation: slideDown 0.4s ease;
-  z-index: 200; position: relative;
+  z-index: 9999;
+  position: relative;
+  flex-shrink: 0;
 }
 @keyframes slideDown {
   from { transform: translateY(-100%); opacity: 0; }
