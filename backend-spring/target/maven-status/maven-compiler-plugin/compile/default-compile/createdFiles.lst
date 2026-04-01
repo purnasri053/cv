@@ -1,0 +1,13 @@
+com\cvscanner\dto\LoginRequest.class
+com\cvscanner\repository\UserRepository.class
+com\cvscanner\config\CorsConfig.class
+com\cvscanner\entity\User$Role.class
+com\cvscanner\dto\LoginResponse$UserDto.class
+com\cvscanner\controller\AuthController.class
+com\cvscanner\dto\LoginResponse.class
+com\cvscanner\config\CorsConfig$1.class
+com\cvscanner\service\ResumeService.class
+com\cvscanner\dto\RegisterRequest.class
+com\cvscanner\entity\User.class
+com\cvscanner\CvScannerApplication.class
+com\cvscanner\controller\ResumeController.class

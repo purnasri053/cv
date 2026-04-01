@@ -1,12 +1,15 @@
 import Navbar from '../components/Navbar';
-
 import SkillCard from '../components/SkillCard';
-import { Link } from 'react-router-dom';
 
 function AnalysisPage() {
-  const extractedSkills = ['Python', 'HTML', 'CSS', 'React'];
-  const requiredSkills = ['Python', 'React', 'Node.js', 'MongoDB'];
-  const missingSkills = ['Node.js', 'MongoDB'];
+  const storedData =
+    JSON.parse(localStorage.getItem('candidateAnalysisData')) ||
+    JSON.parse(localStorage.getItem('hrShortlistData'));
+
+  const extractedSkills = storedData?.extractedSkills || [];
+  const requiredSkills = storedData?.requiredSkills || [];
+  const missingSkills = storedData?.missingSkills || [];
+  const matchScore = storedData?.matchScore || 0;
 
   return (
     <div>
@@ -18,8 +21,6 @@ function AnalysisPage() {
           compares them with the job description, and identifies the missing skills.
         </p>
 
-        
-
         <div className="skills-grid">
           <SkillCard title="Extracted Skills" skills={extractedSkills} />
           <SkillCard title="Required Skills" skills={requiredSkills} />
@@ -27,12 +28,8 @@ function AnalysisPage() {
         </div>
 
         <div className="match-score-box">
-          <h3>Match Score: 75%</h3>
+          <h3>Match Score: {matchScore}%</h3>
         </div>
-
-        <Link to="/ranking">
-          <button>View Candidate Ranking</button>
-        </Link>
       </div>
     </div>
   );

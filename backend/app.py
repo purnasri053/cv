@@ -9,8 +9,6 @@ from docx import Document
 
 app = Flask(__name__)
 CORS(app)
-app = Flask(__name__)
-CORS(app)
 
 # ✅ ADD THIS HERE
 db_config = {
@@ -266,16 +264,15 @@ def analyze_multiple_resumes():
         }
 
         response = {
-            "message": "Resume uploaded and analyzed successfully",
-    "fileName": resume.filename,
-    "candidateName": candidate_name,
-    "extractedSkills": extracted_skills,
-    "requiredSkills": required_skills,
-    "missingSkills": missing_skills,
-    "matchScore": match_score,
-    "rankedCandidates": [
-        {"name": candidate_name, "score": match_score}
-    ]
+            "message": "Resumes analyzed successfully",
+            "requiredSkills": required_skills,
+            "rankedCandidates": ranked_candidates,
+            "allResults": all_results,
+            "shortlistCount": shortlist_count,
+            "extractedSkills": top_result["extractedSkills"],
+            "missingSkills": top_result["missingSkills"],
+            "matchScore": top_result["score"],
+            "candidateName": top_result["name"]
         }
 
         return jsonify(response), 200

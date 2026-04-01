@@ -14,7 +14,7 @@ import {
 import Navbar from '../components/Navbar';
 
 function DashboardPage() {
-  const storedData = JSON.parse(localStorage.getItem('analysisData'));
+  const storedData = JSON.parse(localStorage.getItem('hrShortlistData')) || JSON.parse(localStorage.getItem('candidateAnalysisData'));
   const candidates = storedData?.rankedCandidates || [];
   const matchScore = storedData?.matchScore || 0;
   const missingSkills = storedData?.missingSkills || [];

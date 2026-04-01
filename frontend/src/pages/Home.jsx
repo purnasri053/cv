@@ -1,114 +1,135 @@
-import Navbar from '../components/Navbar';
 import { Link } from 'react-router-dom';
-import { FaUpload, FaBrain, FaChartBar, FaUserCheck } from 'react-icons/fa';
+import { FaUpload, FaBrain, FaChartBar, FaUserCheck, FaFileAlt } from 'react-icons/fa';
 
 function Home() {
   return (
-    <div>
-      <Navbar />
+    <div className="landing-page">
 
-      <div className="hero-section">
-        <div className="page-container">
-          <h1 className="hero-title">
-            AI-Powered Intelligent Resume Screening & Skill Gap Analysis
-          </h1>
-          <p className="hero-subtitle">
-            Analyze candidate resumes, compare them with job descriptions,
-            identify missing skills, and rank candidates effectively using
-            Natural Language Processing.
-          </p>
+      {/* Navbar */}
+      <nav className="landing-nav">
+        <div className="landing-nav-logo">
+          <FaFileAlt className="landing-logo-icon" />
+          <span>CVScanner</span>
+        </div>
+        <div className="landing-nav-actions">
           <Link to="/select-role">
-            <button className="hero-button">Get Started</button>
+            <button className="btn-ghost">Sign In</button>
+          </Link>
+          <Link to="/select-role">
+            <button className="btn-accent">Create Account</button>
           </Link>
         </div>
-      </div>
+      </nav>
 
-      <div className="page-container">
-        <section className="section-block">
-          <h2 className="section-title">Key Features</h2>
-
-          <div className="feature-grid">
-            <div className="feature-card">
-              <FaUpload className="feature-icon" />
-              <h3>Resume Upload</h3>
-              <p>
-                Upload one or more candidate resumes in PDF or DOCX format for
-                intelligent screening.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <FaBrain className="feature-icon" />
-              <h3>NLP Processing</h3>
-              <p>
-                Extract and analyze candidate skills from resume text using
-                Natural Language Processing techniques.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <FaChartBar className="feature-icon" />
-              <h3>Skill Gap Analysis</h3>
-              <p>
-                Compare extracted candidate skills with the required job skills
-                and identify missing competencies.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <FaUserCheck className="feature-icon" />
-              <h3>Candidate Ranking</h3>
-              <p>
-                Rank candidates based on match score and identify the best-fit
-                profile for the job role.
-              </p>
-            </div>
+      {/* Hero */}
+      <section className="landing-hero">
+        <div className="hero-badge">AI-Powered Resume Screening</div>
+        <h1 className="hero-title">
+          Welcome to <span className="hero-highlight">CVScanner</span>
+        </h1>
+        <p className="hero-sub">
+          Smarter hiring starts here. Match candidates to roles instantly,
+          uncover skill gaps, and make confident decisions — all in one place.
+        </p>
+        <div className="hero-cta-row">
+          <Link to="/select-role">
+            <button className="btn-accent btn-lg">Get Started Free</button>
+          </Link>
+          <Link to="/select-role">
+            <button className="btn-ghost-dark btn-lg">Sign In</button>
+          </Link>
+        </div>
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <span className="stat-num">10x</span>
+            <span className="stat-label">Faster Screening</span>
           </div>
-        </section>
-
-        <section className="section-block">
-          <h2 className="section-title">How It Works</h2>
-
-          <div className="workflow-grid">
-            <div className="workflow-step">
-              <span className="step-number">1</span>
-              <h3>Upload Resume</h3>
-              <p>Upload one or multiple candidate resumes.</p>
-            </div>
-
-            <div className="workflow-step">
-              <span className="step-number">2</span>
-              <h3>Provide Job Description</h3>
-              <p>Paste the job role requirements and expected skills.</p>
-            </div>
-
-            <div className="workflow-step">
-              <span className="step-number">3</span>
-              <h3>NLP Analysis</h3>
-              <p>System extracts, compares, and evaluates skill relevance.</p>
-            </div>
-
-            <div className="workflow-step">
-              <span className="step-number">4</span>
-              <h3>View Results</h3>
-              <p>Check ranking, dashboard insights, and recommendations.</p>
-            </div>
+          <div className="hero-stat-divider" />
+          <div className="hero-stat">
+            <span className="stat-num">95%</span>
+            <span className="stat-label">Match Accuracy</span>
           </div>
-        </section>
+          <div className="hero-stat-divider" />
+          <div className="hero-stat">
+            <span className="stat-num">2 Roles</span>
+            <span className="stat-label">Candidate & HR</span>
+          </div>
+        </div>
+      </section>
 
-        <section className="section-block callout-box">
-          <h2>Why This Project Matters</h2>
-          <p>
-            Traditional resume screening is time-consuming and often misses
-            important skill gaps. This platform automates the screening process,
-            improves efficiency, and helps recruiters make smarter decisions.
-          </p>
-        </section>
-      </div>
+      {/* Features */}
+      <section className="features-section">
+        <p className="features-eyebrow">Everything you need</p>
+        <h2 className="features-title">Built for both sides of hiring</h2>
+        <div className="features-grid">
+          <div className="feat-card">
+            <div className="feat-icon-wrap feat-blue">
+              <FaUpload />
+            </div>
+            <h3>Resume Upload</h3>
+            <p>Upload PDF or DOCX resumes — single or bulk — and get results in seconds.</p>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-wrap feat-purple">
+              <FaBrain />
+            </div>
+            <h3>NLP Analysis</h3>
+            <p>Extract skills automatically from resume text using natural language processing.</p>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-wrap feat-teal">
+              <FaChartBar />
+            </div>
+            <h3>Skill Gap Detection</h3>
+            <p>See exactly which skills are missing compared to the job requirements.</p>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-wrap feat-orange">
+              <FaUserCheck />
+            </div>
+            <h3>Candidate Ranking</h3>
+            <p>Rank all applicants by match score and shortlist the best fits instantly.</p>
+          </div>
+        </div>
+      </section>
 
-      <footer className="footer">
-        <p>AI Resume Screening Platform © 2026</p>
+      {/* How it works */}
+      <section className="how-section">
+        <p className="features-eyebrow">Simple process</p>
+        <h2 className="features-title">How it works</h2>
+        <div className="steps-row">
+          {[
+            { n: '01', title: 'Upload Resume', desc: 'Drop in one or multiple candidate resumes.' },
+            { n: '02', title: 'Add Job Description', desc: 'Paste the role requirements and expected skills.' },
+            { n: '03', title: 'AI Analysis', desc: 'CVScanner extracts, compares and scores instantly.' },
+            { n: '04', title: 'View Results', desc: 'Get rankings, skill gaps and hiring recommendations.' },
+          ].map((step) => (
+            <div className="step-card" key={step.n}>
+              <span className="step-num">{step.n}</span>
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="cta-banner">
+        <h2>Ready to hire smarter?</h2>
+        <p>Join CVScanner and take the guesswork out of recruitment.</p>
+        <Link to="/select-role">
+          <button className="btn-accent btn-lg">Create Your Account</button>
+        </Link>
+      </section>
+
+      <footer className="landing-footer">
+        <div className="footer-logo">
+          <FaFileAlt />
+          <span>CVScanner</span>
+        </div>
+        <p>© 2026 CVScanner. AI Resume Screening Platform.</p>
       </footer>
+
     </div>
   );
 }
