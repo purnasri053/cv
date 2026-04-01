@@ -73,83 +73,89 @@ function AIChatBox() {
     setSpeaking(false);
   };
 
-  // ── Speech-to-Text ────────────────────────────────────────────────────────
+  // ── Speech-to-Text (mobile-compatible) ───────────────────────────────────
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      setMessages(prev => [...prev, { role: 'assistant', text: 'Speech recognition is not supported in this browser. Please use Chrome.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', text: '❌ Speech recognition not supported. Please use Chrome on Android or Safari on iOS.' }]);
       return;
     }
 
-    // Request mic permission explicitly first
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(() => {
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = true;
-        recognition.continuous = false;
-        recognition.maxAlternatives = 1;
-        recognitionRef.current = recognition;
+    // On mobile, we must create recognition INSIDE a user gesture (button tap)
+    // Do NOT call getUserMedia first — it blocks recognition on mobile
+    try {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      }
 
-        let finalTranscript = '';
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+      recognition.maxAlternatives = 1;
+      recognitionRef.current = recognition;
 
-        recognition.onstart = () => {
-          setListening(true);
-          setInput('');
-          finalTranscript = '';
-        };
+      let finalTranscript = '';
+      let interimTranscript = '';
 
-        recognition.onresult = (e) => {
-          let interim = '';
-          finalTranscript = '';
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            if (e.results[i].isFinal) {
-              finalTranscript += e.results[i][0].transcript;
-            } else {
-              interim += e.results[i][0].transcript;
-            }
-          }
-          setInput(finalTranscript || interim);
-        };
+      recognition.onstart = () => {
+        setListening(true);
+        setInput('');
+        finalTranscript = '';
+        interimTranscript = '';
+      };
 
-        recognition.onend = () => {
-          setListening(false);
-          if (finalTranscript.trim()) {
-            // Auto-send after speech ends
-            setTimeout(() => {
-              sendMessage(finalTranscript.trim());
-            }, 300);
-          }
-        };
-
-        recognition.onerror = (e) => {
-          setListening(false);
-          if (e.error === 'not-allowed') {
-            setMessages(prev => [...prev, { role: 'assistant', text: 'Microphone access denied. Please allow microphone permission in your browser settings.' }]);
-          } else if (e.error === 'no-speech') {
-            setMessages(prev => [...prev, { role: 'assistant', text: 'No speech detected. Please try again.' }]);
+      recognition.onresult = (e) => {
+        finalTranscript = '';
+        interimTranscript = '';
+        for (let i = 0; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            finalTranscript += e.results[i][0].transcript;
           } else {
-            setMessages(prev => [...prev, { role: 'assistant', text: `Mic error: ${e.error}. Please try again.` }]);
+            interimTranscript += e.results[i][0].transcript;
           }
-        };
+        }
+        setInput(finalTranscript || interimTranscript);
+      };
 
-        recognition.start();
-      })
-      .catch(() => {
-        setMessages(prev => [...prev, { role: 'assistant', text: 'Microphone access denied. Please click the camera/mic icon in your browser address bar and allow access.' }]);
-      });
+      recognition.onend = () => {
+        setListening(false);
+        const toSend = finalTranscript.trim() || interimTranscript.trim();
+        if (toSend) {
+          setTimeout(() => sendMessage(toSend), 200);
+        }
+      };
+
+      recognition.onerror = (e) => {
+        setListening(false);
+        recognitionRef.current = null;
+        const msgs = {
+          'not-allowed': '🎤 Microphone permission denied. Go to browser Settings → Site Settings → Microphone → Allow.',
+          'no-speech': '🔇 No speech detected. Tap mic and speak clearly.',
+          'network': '🌐 Network error during speech recognition. Check your connection.',
+          'aborted': null, // user cancelled — no message needed
+        };
+        const msg = msgs[e.error];
+        if (msg) setMessages(prev => [...prev, { role: 'assistant', text: msg }]);
+      };
+
+      recognition.start();
+    } catch (err) {
+      setListening(false);
+      setMessages(prev => [...prev, { role: 'assistant', text: `Mic error: ${err.message}` }]);
+    }
   };
 
   const stopListening = () => {
-    recognitionRef.current?.stop();
+    try { recognitionRef.current?.stop(); } catch {}
     setListening(false);
   };
 
-  const toggleMic = () => {
+  const handleMicClick = () => {
     if (listening) stopListening();
     else startListening();
   };
-
   // ── Send Message ──────────────────────────────────────────────────────────
   const sendMessage = async (overrideText) => {
     const text = typeof overrideText === 'string' ? overrideText.trim() : input.trim();

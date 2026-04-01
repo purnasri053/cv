@@ -1,58 +1,56 @@
 /**
  * CVScanner PWA Install Popup
- * - Shows on ALL devices when site is installable
- * - Triggers native browser install prompt
- * - Dismissable, remembers dismissal
+ * Works on Android (native prompt) + iOS (manual instructions)
+ * Shows on first visit, remembers dismissal
  */
 
 import { useState, useEffect } from 'react';
-import { FaFileAlt, FaTimes, FaDownload } from 'react-icons/fa';
-import { triggerInstall, isInstallable } from './registerSW';
+import { FaFileAlt, FaTimes, FaDownload, FaShareAlt } from 'react-icons/fa';
 
 function InstallBanner() {
   const [show, setShow] = useState(false);
-  const [canInstall, setCanInstall] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
     try {
-      // Don't show if already dismissed this session
-      const dismissed = sessionStorage.getItem('pwa-dismissed');
-      if (dismissed) return;
+      // Don't show if dismissed this session
+      if (sessionStorage.getItem('pwa-dismissed')) return;
 
-      // Show immediately if already installable
-      if (isInstallable()) {
-        setCanInstall(true);
-        setShow(true);
+      // Detect iOS
+      const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone;
+
+      setIsIOS(ios);
+
+      // Already installed — don't show
+      if (isInStandaloneMode) return;
+
+      // iOS — show manual instructions after 2 seconds
+      if (ios) {
+        setTimeout(() => setShow(true), 2000);
+        return;
       }
 
-      // Listen for install prompt event
-      const onInstallable = () => {
-        const alreadyDismissed = sessionStorage.getItem('pwa-dismissed');
-        if (!alreadyDismissed) {
-          setCanInstall(true);
-          setShow(true);
-        }
+      // Android/Desktop — wait for beforeinstallprompt
+      const handler = (e) => {
+        e.preventDefault();
+        setDeferredPrompt(e);
+        setTimeout(() => setShow(true), 1500);
       };
 
-      const onInstalled = () => setShow(false);
-
-      window.addEventListener('pwa-installable', onInstallable);
-      window.addEventListener('pwa-installed', onInstalled);
-
-      return () => {
-        window.removeEventListener('pwa-installable', onInstallable);
-        window.removeEventListener('pwa-installed', onInstalled);
-      };
+      window.addEventListener('beforeinstallprompt', handler);
+      return () => window.removeEventListener('beforeinstallprompt', handler);
     } catch {
       // Fail silently
     }
   }, []);
 
   const handleInstall = async () => {
-    try {
-      await triggerInstall();
-    } catch {
-      // ignore
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
     }
     setShow(false);
     sessionStorage.setItem('pwa-dismissed', '1');
@@ -67,43 +65,34 @@ function InstallBanner() {
 
   return (
     <>
-      {/* Backdrop */}
       <div className="pwa-backdrop" onClick={handleDismiss} />
+      <div className="pwa-popup" role="dialog">
+        <button className="pwa-popup-close" onClick={handleDismiss}><FaTimes /></button>
 
-      {/* Popup */}
-      <div className="pwa-popup" role="dialog" aria-label="Install CVScanner">
-        <button className="pwa-popup-close" onClick={handleDismiss} aria-label="Close">
-          <FaTimes />
-        </button>
-
-        <div className="pwa-popup-icon">
-          <FaFileAlt />
-        </div>
-
+        <div className="pwa-popup-icon"><FaFileAlt /></div>
         <h3 className="pwa-popup-title">Install CVScanner</h3>
         <p className="pwa-popup-desc">
-          Add CVScanner to your home screen for quick access — works like a native app, even offline.
+          Add to your home screen for instant access — works like a native app.
         </p>
 
         <div className="pwa-popup-features">
           <div className="pwa-feature">⚡ Instant launch</div>
-          <div className="pwa-feature">📱 Native app feel</div>
-          <div className="pwa-feature">🔒 No app store needed</div>
+          <div className="pwa-feature">📱 Native feel</div>
+          <div className="pwa-feature">🔒 No app store</div>
         </div>
 
-        {canInstall ? (
+        {isIOS ? (
+          <div className="pwa-popup-manual">
+            <FaShareAlt style={{ color: '#818cf8', marginBottom: 8, fontSize: 20 }} />
+            <p>Tap <strong>Share</strong> at the bottom of Safari, then tap <strong>"Add to Home Screen"</strong></p>
+          </div>
+        ) : (
           <button className="pwa-popup-btn" onClick={handleInstall}>
             <FaDownload /> Install App
           </button>
-        ) : (
-          <div className="pwa-popup-manual">
-            <p>Tap <strong>Share</strong> → <strong>Add to Home Screen</strong> in your browser</p>
-          </div>
         )}
 
-        <button className="pwa-popup-skip" onClick={handleDismiss}>
-          Not now
-        </button>
+        <button className="pwa-popup-skip" onClick={handleDismiss}>Not now</button>
       </div>
     </>
   );

@@ -38,33 +38,60 @@ public class ResumeService {
     private static final Map<String, List<String>> ROLE_SKILLS = new LinkedHashMap<>();
 
     static {
-        ROLE_SKILLS.put("software developer", List.of("java", "python", "javascript", "git", "sql", "rest api", "problem solving"));
-        ROLE_SKILLS.put("software engineer", List.of("java", "python", "javascript", "git", "sql", "rest api", "system design", "problem solving"));
-        ROLE_SKILLS.put("full stack developer", List.of("react", "node.js", "javascript", "html", "css", "sql", "mongodb", "git", "rest api"));
-        ROLE_SKILLS.put("frontend developer", List.of("html", "css", "javascript", "react", "typescript", "git"));
-        ROLE_SKILLS.put("backend developer", List.of("java", "python", "node.js", "sql", "rest api", "docker", "git"));
-        ROLE_SKILLS.put("data scientist", List.of("python", "machine learning", "deep learning", "pandas", "numpy", "sql", "data analysis", "tensorflow"));
-        ROLE_SKILLS.put("data analyst", List.of("python", "sql", "excel", "power bi", "tableau", "data analysis", "pandas"));
-        ROLE_SKILLS.put("machine learning engineer", List.of("python", "machine learning", "deep learning", "tensorflow", "pytorch", "scikit-learn", "nlp", "sql"));
-        ROLE_SKILLS.put("ai engineer", List.of("python", "machine learning", "deep learning", "nlp", "computer vision", "tensorflow", "pytorch"));
-        ROLE_SKILLS.put("devops engineer", List.of("docker", "kubernetes", "aws", "linux", "git", "ci/cd", "jenkins", "python"));
-        ROLE_SKILLS.put("cloud engineer", List.of("aws", "azure", "gcp", "docker", "kubernetes", "linux", "python", "terraform"));
-        ROLE_SKILLS.put("android developer", List.of("android", "java", "kotlin", "git", "rest api", "sql"));
-        ROLE_SKILLS.put("ios developer", List.of("ios", "swift", "git", "rest api", "xcode"));
-        ROLE_SKILLS.put("mobile developer", List.of("flutter", "react native", "android", "ios", "javascript", "git"));
-        ROLE_SKILLS.put("vlsi engineer", List.of("verilog", "vhdl", "vlsi", "fpga", "cadence", "synopsys", "spice", "matlab"));
-        ROLE_SKILLS.put("vlsi design", List.of("verilog", "vhdl", "vlsi", "fpga", "cadence", "synopsys", "spice", "ltspice"));
-        ROLE_SKILLS.put("embedded systems engineer", List.of("c", "c++", "embedded systems", "arduino", "rtos", "arm", "uart", "spi", "i2c", "matlab"));
-        ROLE_SKILLS.put("embedded developer", List.of("c", "c++", "embedded systems", "rtos", "arm", "git", "linux"));
-        ROLE_SKILLS.put("cybersecurity engineer", List.of("cybersecurity", "ethical hacking", "penetration testing", "networking", "tcp/ip", "linux", "python"));
-        ROLE_SKILLS.put("network engineer", List.of("networking", "tcp/ip", "linux", "cybersecurity", "aws"));
-        ROLE_SKILLS.put("java developer", List.of("java", "spring boot", "hibernate", "sql", "rest api", "git", "maven"));
-        ROLE_SKILLS.put("python developer", List.of("python", "django", "flask", "sql", "rest api", "git", "docker"));
-        ROLE_SKILLS.put("react developer", List.of("react", "javascript", "html", "css", "git", "rest api", "typescript"));
-        ROLE_SKILLS.put("database administrator", List.of("sql", "mysql", "postgresql", "mongodb", "redis", "python", "linux"));
-        ROLE_SKILLS.put("ui ux designer", List.of("html", "css", "javascript", "figma", "communication", "problem solving"));
-        ROLE_SKILLS.put("product manager", List.of("agile", "scrum", "communication", "leadership", "problem solving", "data analysis"));
-        ROLE_SKILLS.put("business analyst", List.of("sql", "excel", "power bi", "data analysis", "communication", "agile"));
+        // Software / Web Development
+        ROLE_SKILLS.put("software developer", List.of("Java", "Python", "JavaScript", "Git", "Sql", "Rest Api", "Problem Solving", "Data Structures"));
+        ROLE_SKILLS.put("software engineer", List.of("Java", "Python", "JavaScript", "Git", "Sql", "Rest Api", "System Design", "Problem Solving", "Data Structures"));
+        ROLE_SKILLS.put("full stack developer", List.of("React", "Node.Js", "JavaScript", "Html", "Css", "Sql", "Mongodb", "Git", "Rest Api", "Docker"));
+        ROLE_SKILLS.put("frontend developer", List.of("Html", "Css", "JavaScript", "React", "TypeScript", "Git", "Responsive Design"));
+        ROLE_SKILLS.put("backend developer", List.of("Java", "Python", "Node.Js", "Sql", "Rest Api", "Docker", "Git", "Microservices"));
+        ROLE_SKILLS.put("web developer", List.of("Html", "Css", "JavaScript", "React", "Node.Js", "Git", "Sql"));
+        ROLE_SKILLS.put("java developer", List.of("Java", "Spring Boot", "Hibernate", "Sql", "Rest Api", "Git", "Maven", "Microservices"));
+        ROLE_SKILLS.put("python developer", List.of("Python", "Django", "Flask", "Sql", "Rest Api", "Git", "Docker"));
+        ROLE_SKILLS.put("react developer", List.of("React", "JavaScript", "Html", "Css", "Git", "Rest Api", "TypeScript", "Redux"));
+        ROLE_SKILLS.put("node developer", List.of("Node.Js", "JavaScript", "Express", "Mongodb", "Rest Api", "Git", "Docker"));
+
+        // Data / AI / ML
+        ROLE_SKILLS.put("data scientist", List.of("Python", "Machine Learning", "Deep Learning", "Pandas", "Numpy", "Sql", "Data Analysis", "TensorFlow", "Statistics"));
+        ROLE_SKILLS.put("data analyst", List.of("Python", "Sql", "Excel", "Power Bi", "Tableau", "Data Analysis", "Pandas", "Statistics"));
+        ROLE_SKILLS.put("machine learning engineer", List.of("Python", "Machine Learning", "Deep Learning", "TensorFlow", "PyTorch", "Scikit-Learn", "Nlp", "Sql", "Docker"));
+        ROLE_SKILLS.put("ai engineer", List.of("Python", "Machine Learning", "Deep Learning", "Nlp", "Computer Vision", "TensorFlow", "PyTorch", "Docker"));
+        ROLE_SKILLS.put("data engineer", List.of("Python", "Sql", "Spark", "Hadoop", "Aws", "Docker", "Airflow", "Data Pipelines"));
+        ROLE_SKILLS.put("business analyst", List.of("Sql", "Excel", "Power Bi", "Data Analysis", "Communication", "Agile", "Requirements Gathering"));
+
+        // DevOps / Cloud
+        ROLE_SKILLS.put("devops engineer", List.of("Docker", "Kubernetes", "Aws", "Linux", "Git", "Ci/Cd", "Jenkins", "Python", "Terraform"));
+        ROLE_SKILLS.put("cloud engineer", List.of("Aws", "Azure", "Gcp", "Docker", "Kubernetes", "Linux", "Python", "Terraform", "Networking"));
+        ROLE_SKILLS.put("site reliability engineer", List.of("Linux", "Docker", "Kubernetes", "Python", "Monitoring", "Aws", "Git", "Ci/Cd"));
+
+        // VLSI / Electronics
+        ROLE_SKILLS.put("vlsi engineer", List.of("Verilog", "Vhdl", "Vlsi", "Fpga", "Cadence", "Synopsys", "Spice", "Matlab", "Digital Design"));
+        ROLE_SKILLS.put("vlsi design", List.of("Verilog", "Vhdl", "Vlsi", "Fpga", "Cadence", "Synopsys", "Spice", "Ltspice", "Digital Design"));
+        ROLE_SKILLS.put("vlsi", List.of("Verilog", "Vhdl", "Vlsi", "Fpga", "Cadence", "Synopsys", "Spice", "Digital Design", "Matlab"));
+        ROLE_SKILLS.put("chip design", List.of("Verilog", "Vhdl", "Vlsi", "Cadence", "Synopsys", "Spice", "Digital Design"));
+        ROLE_SKILLS.put("rtl design", List.of("Verilog", "Vhdl", "Fpga", "Cadence", "Digital Design", "Timing Analysis"));
+
+        // Embedded Systems
+        ROLE_SKILLS.put("embedded systems engineer", List.of("C", "C++", "Embedded Systems", "Arduino", "Rtos", "Arm", "Uart", "Spi", "I2C", "Matlab"));
+        ROLE_SKILLS.put("embedded developer", List.of("C", "C++", "Embedded Systems", "Rtos", "Arm", "Git", "Linux", "Microcontrollers"));
+        ROLE_SKILLS.put("iot engineer", List.of("C", "C++", "Embedded Systems", "Arduino", "Raspberry Pi", "Mqtt", "Python", "Networking"));
+
+        // Mobile
+        ROLE_SKILLS.put("android developer", List.of("Android", "Java", "Kotlin", "Git", "Rest Api", "Sql", "Firebase"));
+        ROLE_SKILLS.put("ios developer", List.of("Ios", "Swift", "Git", "Rest Api", "Xcode", "Firebase"));
+        ROLE_SKILLS.put("mobile developer", List.of("Flutter", "React Native", "Android", "Ios", "JavaScript", "Git", "Rest Api"));
+        ROLE_SKILLS.put("flutter developer", List.of("Flutter", "Dart", "Android", "Ios", "Git", "Rest Api", "Firebase"));
+
+        // Cybersecurity
+        ROLE_SKILLS.put("cybersecurity engineer", List.of("Cybersecurity", "Ethical Hacking", "Penetration Testing", "Networking", "Tcp/Ip", "Linux", "Python"));
+        ROLE_SKILLS.put("security analyst", List.of("Cybersecurity", "Networking", "Linux", "Python", "Siem", "Incident Response"));
+        ROLE_SKILLS.put("network engineer", List.of("Networking", "Tcp/Ip", "Linux", "Cybersecurity", "Aws", "Routing", "Switching"));
+
+        // Other roles
+        ROLE_SKILLS.put("database administrator", List.of("Sql", "Mysql", "Postgresql", "Mongodb", "Redis", "Python", "Linux", "Backup Recovery"));
+        ROLE_SKILLS.put("product manager", List.of("Agile", "Scrum", "Communication", "Leadership", "Problem Solving", "Data Analysis", "Roadmapping"));
+        ROLE_SKILLS.put("ui ux designer", List.of("Html", "Css", "JavaScript", "Figma", "Communication", "Problem Solving", "Prototyping"));
+        ROLE_SKILLS.put("qa engineer", List.of("Testing", "Selenium", "Java", "Python", "Sql", "Git", "Agile", "Api Testing"));
+        ROLE_SKILLS.put("scrum master", List.of("Agile", "Scrum", "Communication", "Leadership", "Jira", "Problem Solving"));
     }
 
     // ── Extract text from uploaded file ───────────────────────────────────
@@ -98,7 +125,7 @@ public class ResumeService {
         // Check if input matches a known job role (short input like "software developer")
         List<String> roleSkills = getRoleSkills(lower);
         if (roleSkills != null && !roleSkills.isEmpty()) {
-            return titleCase(roleSkills);
+            return roleSkills; // already title-cased in the map
         }
 
         // Otherwise do keyword extraction from full text
