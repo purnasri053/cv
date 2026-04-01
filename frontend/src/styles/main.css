@@ -914,3 +914,40 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important;
   .celebration-trophy { font-size: 36px; }
   .motivation-card { flex-direction: column; }
 }
+
+/* ── PWA Install Banner (non-intrusive, mobile only) ── */
+.pwa-banner {
+  position: fixed; bottom: 80px; left: 12px; right: 12px;
+  background: rgba(19,19,31,0.97);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; z-index: 997;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: pwaSlideUp 0.3s ease;
+  flex-wrap: wrap;
+}
+@keyframes pwaSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.pwa-banner-content { display: flex; align-items: center; gap: 10px; flex: 1; }
+.pwa-banner-icon { font-size: 20px; }
+.pwa-banner-text { font-size: 13px; color: #e2e8f0; font-weight: 500; }
+.pwa-banner-actions { display: flex; align-items: center; gap: 8px; }
+.pwa-btn-install {
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  color: #fff; border: none; padding: 8px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 700;
+  cursor: pointer; margin-top: 0; box-shadow: none;
+  font-family: inherit; transition: opacity 0.2s;
+}
+.pwa-btn-install:hover { opacity: 0.85; transform: none; }
+.pwa-btn-dismiss {
+  background: rgba(255,255,255,0.07); color: #94a3b8;
+  border: 1px solid rgba(255,255,255,0.1); width: 28px; height: 28px;
+  border-radius: 8px; font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 0; box-shadow: none; padding: 0; font-family: inherit;
+}
+.pwa-banner-hint { font-size: 11px; color: #64748b; }

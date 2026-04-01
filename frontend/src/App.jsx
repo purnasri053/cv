@@ -11,6 +11,7 @@ import HRDashboardPage from './pages/HRDashboardPage';
 import HRShortlistPage from './pages/HRShortlistPage';
 import DashboardPage from './pages/DashboardPage';
 import AIChatBox from './components/AIChatBox';
+import InstallBanner from './pwa/InstallBanner';
 
 // Redirect logged-in users away from auth pages
 function GuestRoute({ element, role }) {
@@ -47,6 +48,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
       <AIChatBox />
+      <InstallBanner />
     </Router>
   );
 }

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0f0f1a"/>
+  <rect width="512" height="512" rx="80" fill="url(#grad)"/>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <!-- CV text -->
+  <text x="256" y="200" font-family="Arial,sans-serif" font-size="120" font-weight="900"
+        fill="white" text-anchor="middle" dominant-baseline="middle">CV</text>
+  <!-- Scanner line -->
+  <rect x="80" y="280" width="352" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+  <!-- Scan lines -->
+  <rect x="80" y="320" width="200" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
+  <rect x="80" y="346" width="280" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
+  <rect x="80" y="372" width="160" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
+  <!-- Accent dot -->
+  <circle cx="420" cy="320" r="20" fill="#f472b6"/>
+</svg>
