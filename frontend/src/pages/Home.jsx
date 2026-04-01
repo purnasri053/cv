@@ -22,11 +22,19 @@ function Home() {
 
   const handleInstall = async () => {
     if (installPrompt) {
-      installPrompt.prompt();
-      await installPrompt.userChoice;
+      // Native install prompt available — use it
+      try {
+        installPrompt.prompt();
+        const result = await installPrompt.userChoice;
+        if (result.outcome === 'accepted') {
+          setShowBanner(false);
+          sessionStorage.setItem('pwa-dismissed', '1');
+        }
+      } catch {}
+    } else {
+      // No native prompt yet — show Chrome instructions
+      alert('To install CVScanner:\n\n📱 Android: Tap the ⋮ menu (top right in Chrome) → "Add to Home Screen" or "Install App"\n\n🍎 iPhone: Tap Share button → "Add to Home Screen"');
     }
-    setShowBanner(false);
-    sessionStorage.setItem('pwa-dismissed', '1');
   };
 
   const handleDismiss = () => {
@@ -45,7 +53,7 @@ function Home() {
           </span>
           <div className="install-topbar-actions">
             <button className="install-topbar-btn" onClick={handleInstall}>
-              Install
+              {installPrompt ? '⬇ Install' : '📲 How to Install'}
             </button>
             <button className="install-topbar-dismiss" onClick={handleDismiss}>
               ✕
