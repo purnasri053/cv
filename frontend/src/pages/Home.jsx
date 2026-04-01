@@ -7,15 +7,15 @@ function Home() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Don't show if already dismissed or installed
-    if (sessionStorage.getItem('pwa-dismissed')) return;
+    // Always show on homepage — reset any old dismissal
+    sessionStorage.removeItem('pwa-dismissed');
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (standalone) return;
 
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isIOS) {
-      setTimeout(() => setShowBanner(true), 1500);
+      setTimeout(() => setShowBanner(true), 800);
       return;
     }
 
@@ -26,8 +26,8 @@ function Home() {
     };
     window.addEventListener('beforeinstallprompt', handler);
 
-    // Fallback for Android/Desktop if no prompt fires
-    const fallback = setTimeout(() => setShowBanner(true), 3000);
+    // Always show after 1s regardless
+    const fallback = setTimeout(() => setShowBanner(true), 1000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
@@ -50,6 +50,24 @@ function Home() {
   };
   return (
     <div className="landing-page">
+
+      {/* Install notification bar — top of page */}
+      {showBanner && (
+        <div className="install-topbar">
+          <span className="install-topbar-icon">📱</span>
+          <span className="install-topbar-text">
+            Install CVScanner for a better experience 🚀
+          </span>
+          <div className="install-topbar-actions">
+            <button className="install-topbar-btn" onClick={handleInstall}>
+              Install
+            </button>
+            <button className="install-topbar-dismiss" onClick={handleDismiss}>
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Navbar */}
       <nav className="landing-nav">
@@ -164,22 +182,6 @@ function Home() {
         </div>
         <p>© 2026 CVScanner. AI Resume Screening Platform.</p>
       </footer>
-
-      {/* Install Banner */}
-      {showBanner && (
-        <div className="home-install-banner">
-          <span className="home-install-emoji">📱</span>
-          <span className="home-install-text">
-            Install CVScanner for a better experience 🚀
-          </span>
-          <button className="home-install-btn" onClick={handleInstall}>
-            <FaDownload /> Install
-          </button>
-          <button className="home-dismiss-btn" onClick={handleDismiss}>
-            Dismiss
-          </button>
-        </div>
-      )}
 
     </div>
   );

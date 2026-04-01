@@ -1076,3 +1076,45 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important;
   font-family: inherit; flex-shrink: 0; transition: color 0.15s;
 }
 .home-dismiss-btn:hover { color: #94a3b8; transform: none; }
+
+/* ── Install Top Notification Bar ── */
+.install-topbar {
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px;
+  animation: slideDown 0.4s ease;
+  z-index: 200; position: relative;
+}
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+.install-topbar-icon { font-size: 18px; flex-shrink: 0; }
+.install-topbar-text {
+  flex: 1; font-size: 13px; color: #fff;
+  font-weight: 600; line-height: 1.4;
+}
+.install-topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.install-topbar-btn {
+  background: #fff; color: #6366f1;
+  border: none; padding: 7px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 800;
+  cursor: pointer; margin-top: 0; box-shadow: none;
+  font-family: inherit; transition: opacity 0.2s; white-space: nowrap;
+}
+.install-topbar-btn:hover { opacity: 0.9; transform: none; }
+.install-topbar-dismiss {
+  background: rgba(255,255,255,0.2); color: #fff;
+  border: none; width: 28px; height: 28px; border-radius: 50%;
+  font-size: 12px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  margin-top: 0; box-shadow: none; padding: 0;
+  font-family: inherit; transition: background 0.15s;
+}
+.install-topbar-dismiss:hover { background: rgba(255,255,255,0.3); transform: none; }
+
+@media (max-width: 480px) {
+  .install-topbar { padding: 10px 14px; gap: 8px; }
+  .install-topbar-text { font-size: 12px; }
+}
