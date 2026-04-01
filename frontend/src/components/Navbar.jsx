@@ -69,12 +69,13 @@ function Navbar() {
                 </div>
               </div>
             )}
-            <div className="nav-drawer-links">
-              {!loggedInUser && <Link to="/" onClick={close}>Home</Link>}
-              {!loggedInUser && <Link to="/select-role" onClick={close}>Roles</Link>}
-              {userRole === 'candidate' && <Link to="/candidate-dashboard" onClick={close}>My Dashboard</Link>}
-              {userRole === 'hr' && <Link to="/hr-dashboard" onClick={close}>HR Dashboard</Link>}
-            </div>
+            {/* Only show nav links when NOT logged in */}
+            {!loggedInUser && (
+              <div className="nav-drawer-links">
+                <Link to="/" onClick={close}>Home</Link>
+                <Link to="/select-role" onClick={close}>Roles</Link>
+              </div>
+            )}
             {loggedInUser && (
               <button className="nav-drawer-logout" onClick={handleLogout}>Logout</button>
             )}
